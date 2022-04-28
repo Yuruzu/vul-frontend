@@ -62,7 +62,7 @@
             <span>漏洞工具</span>
           </template>
         </el-menu-item>
-        <el-menu-item index="/tools/vulmanage">
+        <el-menu-item index="/tools/authoritymanage">
           <template slot="title">
             <!-- 图标 -->
             <i class="el-icon-menu"></i>
@@ -71,18 +71,14 @@
           </template>
         </el-menu-item>
       </el-submenu>
-      <el-submenu index="3">
+      <el-menu-item index="/logs/logsmanage">
         <template slot="title">
-          <i class="el-icon-lock"></i>
-          <span>权限管理</span>
+          <!-- 图标 -->
+          <i class="el-icon-menu"></i>
+          <!-- 文本 -->
+          <span>日志管理</span>
         </template>
-      </el-submenu>
-      <el-submenu index="4">
-        <template slot="title">
-          <i class="el-icon-document-copy"></i>
-          <span>信息展示</span>
-        </template>
-      </el-submenu>
+      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>

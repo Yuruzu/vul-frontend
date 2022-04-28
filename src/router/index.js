@@ -12,6 +12,13 @@ import Tools from '../components/Tools/Tools.vue'
 import Toolsmanage from '../components/Tools/Toolsmanage.vue'
 import Vulmanage from  '../components/Tools/Vulmanage.vue'
 import Toolsdetails from  '../components/Tools/Toolsdetails.vue'
+import Authoritymanage from '../components/Tools/Authoritymanage.vue'
+
+import Show from '../components/Show/Show.vue'
+import Information from '../components/Show/Information.vue'
+
+import Logs from '../components/Logs/Logs.vue'
+import Logsmanage from '../components/Logs/Logsmanage.vue'
 
 Vue.use(Router)
 
@@ -23,6 +30,7 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
+      redirect: '/show/information',
       component: Home,
       meta: { title: '首页' },
       children: [
@@ -48,8 +56,30 @@ const router = new Router({
             { path: 'toolsmanage', component: Toolsmanage, meta: { title: '漏洞工具' }},
             { path: 'vulmanage', component: Vulmanage, meta: { title: '漏洞情报' }},
             { path: 'toolsdetails/:id', component: Toolsdetails, meta: { title: '工具详情' }},
+            { path: 'authoritymanage', component: Authoritymanage, meta: { title: '权限分配' }},
           ]
         },
+        {
+          path: '/show',
+          // redirect: 'information',
+          name: 'show',
+          component: Show,
+          // meta: { title: '信息展示' },  
+          children: [
+            { path: 'information', component: Information},
+          ]
+        },
+        {
+          path: '/logs',
+          // redirect: 'information',
+          name: 'logs',
+          component: Logs,
+          meta: { title: '日志管理' },  
+          children: [
+            { path: 'logsmanage', component: Logsmanage, meta: { title: '日志管理' }},
+          ]
+        },
+
 
       ]
     },

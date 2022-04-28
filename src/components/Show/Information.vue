@@ -1,0 +1,287 @@
+<template>
+  <div>
+    <el-row :gutter="12">
+      <el-col :span="7">
+        <el-card shadow="hover">
+          <!-- 小标题 -->
+          <el-divider content-position="center">
+            <div class="topTitle">
+              <p>漏洞工具</p>
+            </div>
+          </el-divider>
+          <div id="echarts_box_tools" style="width: 400px;height:400px;"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="7">
+        <el-card shadow="hover">
+          <!-- 小标题 -->
+          <el-divider content-position="center">
+            <div class="topTitle">
+              <p>用户情况</p>
+            </div>
+          </el-divider>
+          <div id="echarts_box_user" style="width: 400px;height:400px;"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="10">
+        <el-card shadow="hover">
+          <!-- 小标题 -->
+          <el-divider content-position="center">
+            <div class="topTitle">
+              <p>登录情况</p>
+            </div>
+          </el-divider>
+          <!-- 登录情况表格 -->
+          <el-table :data="loginData" border>
+            <el-table-column prop="userid" label="用户id" align="center">
+            </el-table-column>
+            <el-table-column prop="username" label="用户名" align="center">
+            </el-table-column>
+            <el-table-column prop="authority" label="权限" align="center">
+            </el-table-column>
+            <el-table-column prop="lastloginip" label="最后登录IP" align="center">
+            </el-table-column>
+            <el-table-column prop="lastlogintime" label="最后登录时间" align="center">
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="12">
+      <el-col :span="20" offset="2">
+        <el-card shadow="hover">
+          <!-- 小标题 -->
+          <el-divider content-position="center">
+            <div class="topTitle">
+              <p>下载情况</p>
+            </div>
+          </el-divider>
+          <!-- 下载情况表格 -->
+          <el-table :data="toolData" border>
+            <el-table-column prop="toolid" label="工具id" align="center">
+            </el-table-column>
+            <el-table-column prop="uploaduser" label="工具上传者" align="center">
+            </el-table-column>
+            <el-table-column prop="uploadtime" label="工具上传时间" align="center">
+            </el-table-column>
+            <el-table-column prop="vulname" label="针对的漏洞名称" align="center">
+            </el-table-column>
+            <el-table-column prop="vultype" label="最漏洞类型" align="center">
+            </el-table-column>
+            <el-table-column prop="vulinstructions" label="使用说明" align="center">
+            </el-table-column>
+            <el-table-column prop="toolpath" label="工具保存路径" align="center">
+            </el-table-column>
+            <el-table-column prop="download" label="下载数量" align="center">
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
+
+  </div>
+</template>
+
+<script>
+import * as echarts from 'echarts'
+export default {
+  data() {
+    return {
+      loginData: [{
+        userid: '0123',
+        username: 'Tom',
+        authority: 'Admin',
+        lastloginip: '127.0.0.1',
+        lastlogintime: '2022-03-03 14:23:03'
+      }, {
+        userid: '0123',
+        username: 'Tom',
+        authority: 'Admin',
+        lastloginip: '127.0.0.1',
+        lastlogintime: '2022-03-03 14:23:03'
+      }, {
+        userid: '0123',
+        username: 'Tom',
+        authority: 'Admin',
+        lastloginip: '127.0.0.1',
+        lastlogintime: '2022-03-03 14:23:03'
+      }, {
+        userid: '0123',
+        username: 'Tom',
+        authority: 'Admin',
+        lastloginip: '127.0.0.1',
+        lastlogintime: '2022-03-03 14:23:03'
+      }, {
+        userid: '0123',
+        username: 'Tom',
+        authority: 'Admin',
+        lastloginip: '127.0.0.1',
+        lastlogintime: '2022-03-03 14:23:03'
+      }],
+
+      toolData: [{
+        toolid: '3254',
+        uploaduser: 'Bob',
+        uploadtime: '2022-03-03 14:23:03',
+        vulname: 'CVE-2019-19642',
+        vultype: '命令注入漏洞',
+        vulinstructions: 'XXXXXXXXXXXXXXXXX',
+        toolpath: '/sldjf/sdf/sdf',
+        download: '1235'
+      }, 
+      {
+        toolid: '3254',
+        uploaduser: 'Bob',
+        uploadtime: '2022-03-03 14:23:03',
+        vulname: 'CVE-2019-19642',
+        vultype: '命令注入漏洞',
+        vulinstructions: 'XXXXXXXXXXXXXXXXX',
+        toolpath: '/sldjf/sdf/sdf',
+        download: '1235'
+      }
+
+      ],
+      
+
+    }
+  },
+  mounted() {
+		  // 1. 基于准备好的dom，初始化echarts实例
+		  var myChart = echarts.init(document.getElementById('echarts_box_tools'))
+      // 2. 网络加载数据 
+      // this.$http.post("http://192.168.32.41:5000/homepage/xx", {headers: {'Content-Type':'application/json'}}).then((res) => {
+      //   console.log(res);
+      //   if (res.data.status=='success'){
+      //     this.$message({
+      //       message:'数据加载成功',
+      //       type:'success'
+      //     })
+      //     myChart.setOption(res.data.data)
+          
+      //   }else{
+      //     this.$message({
+      //       message:res.data.remarks,
+      //       type:'error'
+      //     })
+      //   }
+        
+      // });
+		  
+
+		  // 3. 使用刚指定的配置项和数据，显示图表
+		  myChart.setOption({
+        title: {
+          // text: 'Referer of a Website',
+          // subtext: 'Fake Data',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: '漏洞工具',
+            type: 'pie',
+            radius: '60%',
+            data: [
+              { value: 1048, name: 'Search Engine' },
+              { value: 735, name: 'Direct' },
+              { value: 580, name: 'Email' },
+              { value: 484, name: 'Union Ads' },
+              { value: 300, name: 'Video Ads' }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      })
+
+      var myChart = echarts.init(document.getElementById('echarts_box_user'))
+		  
+		  myChart.setOption( {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c}%'
+        },
+        legend: {
+          data: ['User', 'Admin']
+        },
+        series: [
+          {
+            name: '用户情况',
+            type: 'funnel',
+            left: '10%',
+            top: 60,
+            bottom: 60,
+            width: '80%',
+            min: 0,
+            max: 100,
+            minSize: '0%',
+            maxSize: '100%',
+            sort: 'ascending', // 金字塔形:'ascending',  漏斗图形:'descending'
+            gap: 2,
+            label: {
+              show: true,
+              position: 'inside'
+            },
+            labelLine: {
+              length: 10,
+              lineStyle: {
+                width: 1,
+                type: 'solid'
+              }
+            },
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 1
+            },
+            emphasis: {
+              label: {
+                fontSize: 20
+              }
+            },
+            data: [
+              { value: 40, name: 'Admin' },
+              { value: 100, name: 'User' }
+            ]
+          }
+        ]
+      })
+
+
+
+
+
+		},
+  methods: {
+
+  },
+  computed: {
+
+  }
+}
+</script>
+
+<style lang='less' scoped>
+  .topTitle {
+    // background-image: linear-gradient(45deg, #006fe7, #0084c249);
+    width: 100%;
+    padding: 8px 15px;
+    box-sizing: border-box;
+    p {
+      color: black;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+</style>
