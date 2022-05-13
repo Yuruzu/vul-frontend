@@ -147,16 +147,36 @@ export default {
   },
   mounted() {
 		  // 1. 基于准备好的dom，初始化echarts实例
-		  var myChart = echarts.init(document.getElementById('echarts_box_tools'))
+		  var myChart_tools = echarts.init(document.getElementById('echarts_box_tools'))
+      var myChart_user = echarts.init(document.getElementById('echarts_box_user'))
       // 2. 网络加载数据 
-      // this.$http.post("http://192.168.32.41:5000/homepage/xx", {headers: {'Content-Type':'application/json'}}).then((res) => {
+      this.$http.post("http://192.168.32.41:5000/homepageroute/homepage", {headers: {'Content-Type':'application/json'}}).then((res) => {
+        console.log(res);
+        if (res.data.status=='success'){
+          this.$message({
+            message:'数据加载成功',
+            type:'success'
+          })
+          myChart_user.setOption(res.data.data['usernumbershow'])
+          myChart_tools.setOption(res.data.data['toolnumbershow'])
+          
+        }else{
+          this.$message({
+            message:res.data.remarks,
+            type:'error'
+          })
+        }
+        
+      });
+
+      // this.$http.post("http://192.168.32.41:5000/logmanageroute/selectbyuser", {headers: {'Content-Type':'application/json'}}).then((res) => {
       //   console.log(res);
       //   if (res.data.status=='success'){
       //     this.$message({
       //       message:'数据加载成功',
       //       type:'success'
       //     })
-      //     myChart.setOption(res.data.data)
+      //     this.loginData = res.data.data
           
       //   }else{
       //     this.$message({
@@ -169,93 +189,92 @@ export default {
 		  
 
 		  // 3. 使用刚指定的配置项和数据，显示图表
-		  myChart.setOption({
-        title: {
-          // text: 'Referer of a Website',
-          // subtext: 'Fake Data',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
-          orient: 'vertical',
-          left: 'left'
-        },
-        series: [
-          {
-            name: '漏洞工具',
-            type: 'pie',
-            radius: '60%',
-            data: [
-              { value: 1048, name: 'Search Engine' },
-              { value: 735, name: 'Direct' },
-              { value: 580, name: 'Email' },
-              { value: 484, name: 'Union Ads' },
-              { value: 300, name: 'Video Ads' }
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      })
+		  // myChart.setOption({
+      //   'title': {
+      //     // text: 'Referer of a Website',
+      //     // subtext: 'Fake Data',
+      //     left: 'center'
+      //   },
+      //   tooltip: {
+      //     trigger: 'item'
+      //   },
+      //   legend: {
+      //     orient: 'vertical',
+      //     'left': 'left'
+      //   },
+      //   series: [
+      //     {
+      //       name: '漏洞工具',
+      //       type: 'pie',
+      //       radius: '60%',
+      //       data: [
+      //         { value: 1048, name: 'Search Engine' },
+      //         { value: 735, name: 'Direct' },
+      //         { value: 580, name: 'Email' },
+      //         { value: 484, name: 'Union Ads' },
+      //         { value: 300, name: 'Video Ads' }
+      //       ],
+      //       emphasis: {
+      //         itemStyle: {
+      //           shadowBlur: 10,
+      //           shadowOffsetX: 0,
+      //           shadowColor: 'rgba(0, 0, 0, 0.5)'
+      //         }
+      //       }
+      //     }
+      //   ]
+      // })
 
-      var myChart = echarts.init(document.getElementById('echarts_box_user'))
 		  
-		  myChart.setOption( {
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c}%'
-        },
-        legend: {
-          data: ['User', 'Admin']
-        },
-        series: [
-          {
-            name: '用户情况',
-            type: 'funnel',
-            left: '10%',
-            top: 60,
-            bottom: 60,
-            width: '80%',
-            min: 0,
-            max: 100,
-            minSize: '0%',
-            maxSize: '100%',
-            sort: 'ascending', // 金字塔形:'ascending',  漏斗图形:'descending'
-            gap: 2,
-            label: {
-              show: true,
-              position: 'inside'
-            },
-            labelLine: {
-              length: 10,
-              lineStyle: {
-                width: 1,
-                type: 'solid'
-              }
-            },
-            itemStyle: {
-              borderColor: '#fff',
-              borderWidth: 1
-            },
-            emphasis: {
-              label: {
-                fontSize: 20
-              }
-            },
-            data: [
-              { value: 40, name: 'Admin' },
-              { value: 100, name: 'User' }
-            ]
-          }
-        ]
-      })
+		  // myChart.setOption( {
+      //   tooltip: {
+      //     trigger: 'item',
+      //     formatter: '{a} <br/>{b} : {c}%'
+      //   },
+      //   legend: {
+      //     data: ['User', 'Admin']
+      //   },
+      //   series: [
+      //     {
+      //       'name': '用户情况',
+      //       type: 'funnel',
+      //       left: '10%',
+      //       top: 60,
+      //       bottom: 60,
+      //       width: '80%',
+      //       min: 0,
+      //       max: 100,
+      //       minSize: '0%',
+      //       maxSize: '100%',
+      //       sort: 'ascending', // 金字塔形:'ascending',  漏斗图形:'descending'
+      //       gap: 2,
+      //       label: {
+      //         show: true,
+      //         position: 'inside'
+      //       },
+      //       labelLine: {
+      //         length: 10,
+      //         lineStyle: {
+      //           width: 1,
+      //           type: 'solid'
+      //         }
+      //       },
+      //       itemStyle: {
+      //         borderColor: '#fff',
+      //         borderWidth: 1
+      //       },
+      //       emphasis: {
+      //         label: {
+      //           fontSize: 20
+      //         }
+      //       },
+      //       data: [
+      //         { 'value': 40, 'name': 'Admin' },
+      //         { 'value': 100, 'name': 'User' }
+      //       ]
+      //     }
+      //   ]
+      // })
 
 
 
