@@ -33,7 +33,7 @@
     <el-dialog title="工具权限" :visible.sync="toolsFormVisible" width="70%">
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-input placeholder="请输入工具id" v-model="toolsQueryInfo.toolid">
+          <el-input placeholder="请输入工具id" v-model="toolsQueryInfo.vulname">
             <el-button slot="append" icon="el-icon-search" @click="toolsSearch()"></el-button>
           </el-input>
         </el-col>
@@ -42,20 +42,18 @@
         </el-col>
       </el-row>
       <el-table ref="multipleTable" :data="toolsData" border @selection-change="handleSelectionChange">
-        <el-table-column type="selection"></el-table-column>
-        <el-table-column prop="toolid" label="工具id"></el-table-column>
+        <el-table-column type="selection" :selectable="checkSelect"></el-table-column>
+        <el-table-column prop="id" label="工具id"></el-table-column>
         <el-table-column prop="uploaduser" label="工具上传者"></el-table-column>
         <el-table-column prop="uploadtime" label="工具上传时间"> </el-table-column>
         <el-table-column prop="vulname" label="针对的漏洞名称"> </el-table-column>
         <el-table-column prop="vultype" label="漏洞类型"> </el-table-column>
         <el-table-column prop="vulintro" label="漏洞简介"> </el-table-column>
         <el-table-column prop="vuleffect" label="漏洞影响范围"> </el-table-column>
-        <el-table-column prop="vulparas" label="参数说明"> </el-table-column>
-        <el-table-column prop="vulinstructions" label="使用说明"> </el-table-column>
-        <el-table-column prop="authority" label="工具权限"> </el-table-column>
+        <el-table-column prop="toolstatus" label="工具权限"> </el-table-column>
         <!-- <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button @click="toolAuthority(scope)" type="primary" size="small" :disabled="scope.row.authority ==1?true:false">授权</el-button>
+            <el-button @click="toolAuthority(scope)" type="primary" size="small" :disabled="scope.row.toolstatus ==1?true:false">授权</el-button>
           </template>
         </el-table-column> -->
       </el-table>
@@ -150,7 +148,7 @@ export default {
     return {
       targetUserId: '',
       toolsQueryInfo: {
-        vulname: 'tool123'
+        vulname: 'a'
       },
       userQueryInfo: {
         userid: 'admin12',
@@ -207,16 +205,14 @@ export default {
         ]
       },
       toolsData: [{
-        toolid: '12435',
+        id: '12435',
         uploaduser: 'tom',
         uploadtime: '2022-02-02',
         vulname: 'nmap',
         vultype: 'xxx',
         vulintro: 'introduce',
         vuleffect: 'xxx1',
-        vulparas: 'xxx2',
-        vulinstructions: 'shdif',
-        authority: 1
+        toolstatus: 1
       },
       ],
       formLabelWidth: '120px',
@@ -277,7 +273,7 @@ export default {
     },
 
     async toolsSearch() {
-      var temp = JSON.stringify(this.toolsQueryInfo)
+      var temp = JSON.stringify({"vulname": this.toolsQueryInfo.vulname, "userid": this.targetUserId})
       console.log(temp)
       this.$http.post("http://192.168.32.41:5000/toolsmanage/search", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
         console.log(res);
@@ -315,7 +311,9 @@ export default {
     },
 
     async getToolsData() {
-      this.$http.post("http://192.168.32.41:5000/toolsmanage/alltool", {headers: {'Content-Type':'application/json'}}).then((res) => {
+      var temp = JSON.stringify({'userid': this.targetUserId})
+      console.log(temp)
+      this.$http.post("http://192.168.32.41:5000/toolsmanage/usertool", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
         console.log(res);
         if (res.data.status=='success'){
           this.$message({
@@ -375,12 +373,12 @@ export default {
       } else {
         var toolid_list = []
         this.multipleSelection.forEach(function (value) {
-          toolid_list.push(value.toolid)
+          toolid_list.push(value.id)
         })
         console.log(toolid_list)
         var temp = JSON.stringify({userid: this.targetUserId, toolid: toolid_list})
         console.log(temp)
-        this.$http.post("http://192.168.32.41:5000/authoritymanageroute/tool_add", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
+        this.$http.post("/authoritymanageroute/tool_add", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
           console.log(res);
           if (res.data.status=='success'){
             this.$message({
@@ -388,7 +386,7 @@ export default {
               type:'success'
             })
             this.multipleSelection.forEach(function (value) {
-              value.authority = 1
+              value.toolstatus = 1
             })
             
           }else{
@@ -399,6 +397,15 @@ export default {
           }
         });
       }
+    },
+    checkSelect(row) {
+      let isCheck = true;
+      if (row.toolstatus == 0) {
+        isCheck = true;
+      } else {
+        isCheck = false;
+      }
+      return isCheck;
     }
 
   },

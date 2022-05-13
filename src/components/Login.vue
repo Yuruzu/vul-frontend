@@ -55,8 +55,8 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        username: "admin",
-        password: "123456",
+        username: "admin12",
+        password: "admin",
       },
       // 表单的验证规则对象
       loginFormRules: {
@@ -72,7 +72,7 @@ export default {
         password: [
           { required: true, message: "请输入登录密码", trigger: "blur" },
           {
-            min: 6,
+            min: 3,
             max: 15,
             message: "长度在 6 到 15 个字符",
             trigger: "blur",
@@ -90,26 +90,27 @@ export default {
     login() {
       this.$refs.loginFormRef.validate((valid) => {
         if (!valid) return;
-        window.sessionStorage.setItem("token", 'xxxxxxx');
-        this.$router.push("/home");
-        // this.$http.post("login", this.loginForm).then((res) => {
-        //   window.sessionStorage.setItem("token", 'xxxxxxx');
-        //   this.$router.push("/home");
-        //   if (res.data.meta.status == 200) {
-        //     // 这里前面不能加return
-        //     this.$message.success("登录成功");
-        //     console.log(res);
-        //     // 1 将登录成功之后的token保存到客户端的sessionStorage中
-        //     //     项目中除了登录之外的其他API接口时必须在登录之后才能访问的
-        //     //     token只应当在当前网站打开期间生效，所以将其保存在sessionStorage中
-        //     window.sessionStorage.setItem("token", res.data.data.token);
-        //     // 2 通过编程式导航跳转到后台主页，路由地址是 /home
-        //     this.$router.push("/home");
+        // window.sessionStorage.setItem("token", 'xxxxxxx');
+        // this.$router.push("/home");
+        var temp = JSON.stringify(this.loginForm)
+        console.log(temp)
+        this.$http.post("http://192.168.32.41:5000/auth/login", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
+          console.log(res);
+          if (res.data.status=='success') {
+            // 这里前面不能加return
+            this.$message.success("登录成功");
+            // 1 将登录成功之后的token保存到客户端的sessionStorage中
+            //     项目中除了登录之外的其他API接口时必须在登录之后才能访问的
+            //     token只应当在当前网站打开期间生效，所以将其保存在sessionStorage中
+            // window.sessionStorage.setItem("token", res.data.data.token);
+            // 2 通过编程式导航跳转到后台主页，路由地址是 /home
+            window.sessionStorage.setItem("token", 'xxxxxxx');
+            this.$router.push("/home");
 
-        //   } else {
-        //     return this.$message.error("登录失败");
-        //   }
-        // });
+          } else {
+            this.$message.error("登录失败");
+          }
+        });
       });
     },
   },

@@ -157,8 +157,8 @@ export default {
             message:'数据加载成功',
             type:'success'
           })
-          myChart_user.setOption(res.data.data['usernumbershow'])
-          myChart_tools.setOption(res.data.data['toolnumbershow'])
+          myChart_user.setOption(res.data.data[1]['usernumber'])
+          myChart_tools.setOption(res.data.data[0]['toolnumber'])
           
         }else{
           this.$message({
