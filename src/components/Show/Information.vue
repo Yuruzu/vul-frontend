@@ -24,39 +24,54 @@
         </el-card>
       </el-col>
       <el-col :span="10">
-        <el-card shadow="hover">
-          <!-- 小标题 -->
+        <!-- <el-card shadow="hover">
           <el-divider content-position="center">
             <div class="topTitle">
               <p>登录情况</p>
             </div>
           </el-divider>
-          <!-- 登录情况表格 -->
           <el-table :data="loginData" border>
+            <el-table-column prop="logid" label="日志id" align="center">
+            </el-table-column>
+            <el-table-column prop="operate" label="操作" align="center">
+            </el-table-column>
+            <el-table-column prop="optime" label="操作时间" align="center">
+            </el-table-column>
             <el-table-column prop="userid" label="用户id" align="center">
             </el-table-column>
             <el-table-column prop="username" label="用户名" align="center">
             </el-table-column>
-            <el-table-column prop="authority" label="权限" align="center">
-            </el-table-column>
-            <el-table-column prop="lastloginip" label="最后登录IP" align="center">
-            </el-table-column>
-            <el-table-column prop="lastlogintime" label="最后登录时间" align="center">
-            </el-table-column>
           </el-table>
-        </el-card>
+        </el-card> -->
       </el-col>
     </el-row>
     <el-row :gutter="12">
       <el-col :span="20" offset="2">
         <el-card shadow="hover">
-          <!-- 小标题 -->
+          <el-divider content-position="center">
+            <div class="topTitle">
+              <p>登录情况</p>
+            </div>
+          </el-divider>
+          <el-table :data="loginData" border>
+            <el-table-column prop="logid" label="日志id" align="center">
+            </el-table-column>
+            <el-table-column prop="operate" label="操作" align="center">
+            </el-table-column>
+            <el-table-column prop="optime" label="操作时间" align="center">
+            </el-table-column>
+            <el-table-column prop="userid" label="用户id" align="center">
+            </el-table-column>
+            <el-table-column prop="username" label="用户名" align="center">
+            </el-table-column>
+          </el-table>
+        </el-card>
+        <!-- <el-card shadow="hover">
           <el-divider content-position="center">
             <div class="topTitle">
               <p>下载情况</p>
             </div>
           </el-divider>
-          <!-- 下载情况表格 -->
           <el-table :data="toolData" border>
             <el-table-column prop="toolid" label="工具id" align="center">
             </el-table-column>
@@ -75,7 +90,7 @@
             <el-table-column prop="download" label="下载数量" align="center">
             </el-table-column>
           </el-table>
-        </el-card>
+        </el-card> -->
       </el-col>
     </el-row>
 
@@ -88,59 +103,35 @@ export default {
   data() {
     return {
       loginData: [{
-        userid: '0123',
-        username: 'Tom',
-        authority: 'Admin',
-        lastloginip: '127.0.0.1',
-        lastlogintime: '2022-03-03 14:23:03'
-      }, {
-        userid: '0123',
-        username: 'Tom',
-        authority: 'Admin',
-        lastloginip: '127.0.0.1',
-        lastlogintime: '2022-03-03 14:23:03'
-      }, {
-        userid: '0123',
-        username: 'Tom',
-        authority: 'Admin',
-        lastloginip: '127.0.0.1',
-        lastlogintime: '2022-03-03 14:23:03'
-      }, {
-        userid: '0123',
-        username: 'Tom',
-        authority: 'Admin',
-        lastloginip: '127.0.0.1',
-        lastlogintime: '2022-03-03 14:23:03'
-      }, {
-        userid: '0123',
-        username: 'Tom',
-        authority: 'Admin',
-        lastloginip: '127.0.0.1',
-        lastlogintime: '2022-03-03 14:23:03'
-      }],
+        logid: "32",
+        operate: "登录",
+        optime: "Fri, 13 May 2022 14:48:03 GMT",
+        userid: "lisi165182499",
+        username: "lisi"
+      }, ],
 
-      toolData: [{
-        toolid: '3254',
-        uploaduser: 'Bob',
-        uploadtime: '2022-03-03 14:23:03',
-        vulname: 'CVE-2019-19642',
-        vultype: '命令注入漏洞',
-        vulinstructions: 'XXXXXXXXXXXXXXXXX',
-        toolpath: '/sldjf/sdf/sdf',
-        download: '1235'
-      }, 
-      {
-        toolid: '3254',
-        uploaduser: 'Bob',
-        uploadtime: '2022-03-03 14:23:03',
-        vulname: 'CVE-2019-19642',
-        vultype: '命令注入漏洞',
-        vulinstructions: 'XXXXXXXXXXXXXXXXX',
-        toolpath: '/sldjf/sdf/sdf',
-        download: '1235'
-      }
+      // toolData: [{
+      //   toolid: '3254',
+      //   uploaduser: 'Bob',
+      //   uploadtime: '2022-03-03 14:23:03',
+      //   vulname: 'CVE-2019-19642',
+      //   vultype: '命令注入漏洞',
+      //   vulinstructions: 'XXXXXXXXXXXXXXXXX',
+      //   toolpath: '/sldjf/sdf/sdf',
+      //   download: '1235'
+      // }, 
+      // {
+      //   toolid: '3254',
+      //   uploaduser: 'Bob',
+      //   uploadtime: '2022-03-03 14:23:03',
+      //   vulname: 'CVE-2019-19642',
+      //   vultype: '命令注入漏洞',
+      //   vulinstructions: 'XXXXXXXXXXXXXXXXX',
+      //   toolpath: '/sldjf/sdf/sdf',
+      //   download: '1235'
+      // }
 
-      ],
+      // ],
       
 
     }
@@ -159,6 +150,7 @@ export default {
           })
           myChart_user.setOption(res.data.data[1]['usernumber'])
           myChart_tools.setOption(res.data.data[0]['toolnumber'])
+          this.loginData = res.data.data[2]['loginfmation']
           
         }else{
           this.$message({
