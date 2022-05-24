@@ -102,9 +102,12 @@ export default {
             // 1 将登录成功之后的token保存到客户端的sessionStorage中
             //     项目中除了登录之外的其他API接口时必须在登录之后才能访问的
             //     token只应当在当前网站打开期间生效，所以将其保存在sessionStorage中
-            // window.sessionStorage.setItem("token", res.data.data.token);
+            console.log(res.headers.token)
+            window.sessionStorage.setItem("token", res.headers.token);
+            
+
             // 2 通过编程式导航跳转到后台主页，路由地址是 /home
-            window.sessionStorage.setItem("token", 'xxxxxxx');
+            // window.sessionStorage.setItem("token", 'xxxxxxx');
             this.$router.push("/home");
 
           } else {

@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column prop="userid" label="userid">
         </el-table-column>
-        <el-table-column prop="optime" label="操作时间"> </el-table-column>
+        <el-table-column prop="optime" label="操作时间" :formatter="formatTimeDate"> </el-table-column>
         <el-table-column prop="operate" label="操作"> </el-table-column>
       </el-table>
     </el-card>
@@ -45,16 +45,28 @@ export default {
       },
       ],
       logsQueryInfo: {
-        starttime: '2022-05-01',
-        stoptime: '2022-05-09',
+        starttime: '2022-04-30T16:00:00.000Z',
+        stoptime: '2022-05-17T16:00:00.000Z',
       },
 
     }
   },
 
   methods: {
+    formatting(time){
+      var time = new Date(time);
+      var y = time.getFullYear();
+      var m = time.getMonth()+1;
+      var d = time.getDate();
+      return y+'-'+this.repair0(m)+'-'+this.repair0(d);
+    },
+    repair0(m){
+      return m<10?'0'+m:m 
+    },
+
     async logsSearch() {
-      var temp = JSON.stringify(this.logsQueryInfo)
+      var new_logsQueryInfo = {starttime: this.formatting(this.logsQueryInfo.starttime), stoptime: this.formatting(this.logsQueryInfo.stoptime)}
+      var temp = JSON.stringify(new_logsQueryInfo)
       console.log(temp)
       this.$http.post("http://192.168.32.41:5000/logmanageroute/selectbytime", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
         console.log(res);
@@ -80,7 +92,7 @@ export default {
           message:'数据加载成功',
           type:'success'
         })
-        this.loginData = res.data.data
+        this.logsData = res.data.data
         
       }else{
         this.$message({

@@ -46,7 +46,7 @@
       </el-col>
     </el-row>
     <el-row :gutter="12">
-      <el-col :span="20" offset="2">
+      <el-col :span="20" :offset="2">
         <el-card shadow="hover">
           <el-divider content-position="center">
             <div class="topTitle">

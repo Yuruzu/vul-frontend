@@ -18,7 +18,7 @@
         <el-table-column prop="username" label="用户名称"></el-table-column>
         <el-table-column prop="createtime" label="创建时间"> </el-table-column>
         <el-table-column prop="authority" label="用户权限"> </el-table-column>
-        <el-table-column prop="lastlogintime" label="最后一次登录时间"> </el-table-column>
+        <el-table-column prop="lastlogintime" label="最后一次登录时间" :formatter="formatTimeDate"> </el-table-column>
         <el-table-column prop="status" label="状态"> </el-table-column>
         <el-table-column prop="organizer" label="所属单位"> </el-table-column>
         <el-table-column fixed="right" label="操作">
@@ -30,10 +30,10 @@
       </el-table>
     </el-card>
     <!-- -->
-    <el-dialog title="工具权限" :visible.sync="toolsFormVisible" width="70%">
+    <el-dialog title="工具权限" :visible.sync="toolsFormVisible" width="75%">
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-input placeholder="请输入工具id" v-model="toolsQueryInfo.vulname">
+          <el-input placeholder="请输入针对的漏洞名称" v-model="toolsQueryInfo.vulname">
             <el-button slot="append" icon="el-icon-search" @click="toolsSearch()"></el-button>
           </el-input>
         </el-col>
@@ -45,7 +45,7 @@
         <el-table-column type="selection" :selectable="checkSelect"></el-table-column>
         <el-table-column prop="id" label="工具id"></el-table-column>
         <el-table-column prop="uploaduser" label="工具上传者"></el-table-column>
-        <el-table-column prop="uploadtime" label="工具上传时间"> </el-table-column>
+        <el-table-column prop="uploadtime" label="工具上传时间" :formatter="formatTimeDate"> </el-table-column>
         <el-table-column prop="vulname" label="针对的漏洞名称"> </el-table-column>
         <el-table-column prop="vultype" label="漏洞类型"> </el-table-column>
         <el-table-column prop="vulintro" label="漏洞简介"> </el-table-column>
@@ -262,7 +262,7 @@ export default {
             message:'搜索成功',
             type:'success'
           })
-          this.userData = res.data.data
+          this.userData = [res.data.data]
         }else{
           this.$message({
             message:res.data.remarks,
@@ -378,7 +378,7 @@ export default {
         console.log(toolid_list)
         var temp = JSON.stringify({userid: this.targetUserId, toolid: toolid_list})
         console.log(temp)
-        this.$http.post("/authoritymanageroute/tool_add", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
+        this.$http.post("http://192.168.32.41:5000/authoritymanageroute/tool_add", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
           console.log(res);
           if (res.data.status=='success'){
             this.$message({
@@ -406,7 +406,7 @@ export default {
         isCheck = false;
       }
       return isCheck;
-    }
+    },
 
   },
   computed: {

@@ -32,7 +32,7 @@ export default {
     };
   },
   created() {
-    this.getMenuList();
+    // this.getMenuList();
   },
   methods: {
     logout() {
@@ -40,18 +40,18 @@ export default {
       window.sessionStorage.clear();
       this.$router.push("/login");
     },
-    getMenuList() {
-      // 获取所有的菜单名称
-      this.$http.get("menus").then((res) => {
-        console.log(res);
-        if (res.data.meta.status == 200) {
-          this.menulist = res.data.data;
-          console.log(this.menulist);
-        } else {
-          return this.$message.error(res.data.meta.msg);
-        }
-      });
-    },
+    // getMenuList() {
+    //   // 获取所有的菜单名称
+    //   this.$http.get("menus").then((res) => {
+    //     console.log(res);
+    //     if (res.data.meta.status == 200) {
+    //       this.menulist = res.data.data;
+    //       console.log(this.menulist);
+    //     } else {
+    //       return this.$message.error(res.data.meta.msg);
+    //     }
+    //   });
+    // },
     toggleCollapse() {
       // 点击按钮，切换菜单的折叠与展开
       this.isCollapse = !this.isCollapse;
