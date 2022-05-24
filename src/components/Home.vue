@@ -35,11 +35,6 @@ export default {
     // this.getMenuList();
   },
   methods: {
-    logout() {
-      // 清空token 并 跳转到登录页
-      window.sessionStorage.clear();
-      this.$router.push("/login");
-    },
     // getMenuList() {
     //   // 获取所有的菜单名称
     //   this.$http.get("menus").then((res) => {
@@ -74,6 +69,7 @@ export default {
 .main-container {
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
 }
 
 .toggle-button {

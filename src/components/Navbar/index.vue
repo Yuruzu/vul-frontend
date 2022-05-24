@@ -99,8 +99,21 @@ export default {
   methods: {
     logout() {
       // 清空token 并 跳转到登录页
-      window.sessionStorage.clear();
-      this.$router.push("/login");
+      // window.sessionStorage.clear();
+      // this.$router.push("/login");
+      this.$http.post("http://192.168.32.41:5000/auth/logout", {headers: {'Content-Type':'application/json'}}).then((res) => {
+        console.log(res);
+        if (res.data.status=='success') {
+          // 这里前面不能加return
+          this.$message.success("注销成功");
+          window.sessionStorage.clear();
+          
+          this.$router.push("/login");
+
+        } else {
+          this.$message.error("注销失败");
+        }
+      });
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
