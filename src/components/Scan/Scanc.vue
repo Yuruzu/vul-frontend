@@ -82,7 +82,7 @@ export default {
         id: '',
         userid: 'admin'
       },
-      totalScans: '',
+      totalScans: 0,
       currentPage: 1, // 当前页数
       pageSize: 8
     };
@@ -91,7 +91,6 @@ export default {
     seachScans() {
       this.$http.post("http://192.168.32.126:8080/collectmessage/cscanhistory", this.queryInfo)
       .then((res) => {
-        console.log(res)
         this.scanfilesData = res.data.data.reverse();
         this.totalScans = res.data.data.length;
         // if (res.data.success) {
@@ -107,7 +106,6 @@ export default {
       this.portdialogVisible = false
       this.$http.post("http://192.168.32.126:8080/collectmessage/cscan", this.fileform)
       .then((res) => {
-        console.log(res)
         if (res.data.status == 'success') {
           // 隐藏对话框
           this.portdialogVisible = false
@@ -151,24 +149,13 @@ export default {
         });
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.currentPage = 1;
       this.pageSize = val;
     },
     handleCurrentChangeD(val) {
-      console.log(`当前页: ${val}`);
       this.currentPage = val;
     },
-    formatTimeDate (row, column, cellValue, index) {
-      const daterc = row.scan_time
-      let date = new Date(row.scan_time)
-      let dateArr = row.scan_time.split(' ');
-      let Str=date.getFullYear() + '-' +
-      (date.getMonth() + 1) + '-' + 
-      date.getDate() + ' ' +
-      dateArr[4]  
-      return Str
-    }
+
   },
   created() {
     this.seachScans();

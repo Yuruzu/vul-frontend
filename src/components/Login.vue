@@ -55,7 +55,7 @@ export default {
     return {
       // 登录表单的数据绑定对象
       loginForm: {
-        username: "admin12",
+        username: "lisi",
         password: "admin",
       },
       // 表单的验证规则对象
@@ -94,7 +94,7 @@ export default {
         // this.$router.push("/home");
         var temp = JSON.stringify(this.loginForm)
         console.log(temp)
-        this.$http.post("http://192.168.32.41:5000/auth/login", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
+        this.$http.post("auth/login", temp, {headers: {'Content-Type':'application/json'}}).then((res) => {
           console.log(res);
           if (res.data.status=='success') {
             // 这里前面不能加return

@@ -85,12 +85,12 @@ export default {
   },
   methods: {
     downloadTool() {
-      this.$http.get("http://192.168.32.169:8080/toolsmanage/download", {params: {
+      this.$http.get("toolsmanage/download", {params: {
         'toolid': this.detail.toolid,
         'type': 'tool'
       }})
       .then((res) => {
-        window.open("http://192.168.32.169:8080/toolsmanage/download?toolid=" + this.detail.toolid + "&type=tool") // 新窗口打开外链接
+        window.open("toolsmanage/download?toolid=" + this.detail.toolid + "&type=tool") // 新窗口打开外链接
         // console.log(res.data)
         // var data  = new Blob( [ res.data ], {type: 'application/octet-stream'} )
         // var downloadUrl = window.URL.createObjectURL(data)
@@ -105,12 +105,12 @@ export default {
       });     
     },
     downloadToolManual() {
-      this.$http.get("http://192.168.32.169:8080/toolsmanage/download", {params: {
+      this.$http.get("toolsmanage/download", {params: {
         'toolid': this.detail.toolid,
         'type': 'toolmanual'
       }})
       .then((res) => {
-        window.open("http://192.168.32.169:8080/toolsmanage/download?toolid=" + this.detail.toolid + "&type=toolmanual") // 新窗口打开外链接
+        window.open("toolsmanage/download?toolid=" + this.detail.toolid + "&type=toolmanual") // 新窗口打开外链接
       }); 
     }
   },
@@ -118,9 +118,8 @@ export default {
   },
   mounted() {
     this.detail.toolid = this.$route.params.id;
-    this.$http.get("http://192.168.32.169:8080/toolsmanage/get", {params: {
-        'toolid': this.detail.toolid
-      }})
+    var temp = JSON.stringify({"toolid": this.detail.toolid})
+    this.$http.post("toolsmanage/get", temp, {headers: {'Content-Type':'application/json'}})
       .then((res) => {
         if (res.data.status == 'success') {
           this.detail.uploaduser = res.data.data[0].uploaduser;

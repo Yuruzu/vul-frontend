@@ -24,7 +24,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="service_name" label="端口开放服务"> </el-table-column>
-        <el-table-column prop="scan_time" label="完成时间" :formatter="formatTimeDate"> </el-table-column>
+        <el-table-column prop="scan_time" label="完成时间" :formatter="formatTimeDate"> </el-table-column> 
+        <!-- :formatter="formatTimeDate" -->
         <el-table-column prop="delete" label="删除">
           <template slot-scope="scope">
             <el-button
@@ -86,16 +87,15 @@ export default {
         id: '',
         userid: 'admin'
       },
-      totalScans: '',
+      totalScans: 0,
       currentPage: 1, // 当前页数
-      pageSize: 8
+      pageSize: 8,
     };
   },
   methods: {
     seachScans() {
       this.$http.post("http://192.168.32.126:8080/collectmessage/scanportshistory", this.queryInfo)
       .then((res) => {
-        console.log(res)
         this.scanportsData = res.data.data.reverse();
         this.totalScans = res.data.data.length;
         // if (res.data.success) {
@@ -111,7 +111,6 @@ export default {
       this.portdialogVisible = false
       this.$http.post("http://192.168.32.126:8080/collectmessage/scanports", this.portform)
       .then((res) => {
-        console.log(res)
         if (res.data.status == 'success') {
           // 隐藏对话框
           this.portdialogVisible = false
@@ -155,24 +154,13 @@ export default {
         });
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.currentPage = 1;
       this.pageSize = val;
     },
     handleCurrentChangeD(val) {
-      console.log(`当前页: ${val}`);
       this.currentPage = val;
     },
-    formatTimeDate (row, column, cellValue, index) {
-      const daterc = row.scan_time
-      let date = new Date(row.scan_time)
-      let dateArr = row.scan_time.split(' ');
-      let Str=date.getFullYear() + '-' +
-      (date.getMonth() + 1) + '-' + 
-      date.getDate() + ' ' +
-      dateArr[4]  
-      return Str
-    }
+
   },
   created() {
     this.seachScans();

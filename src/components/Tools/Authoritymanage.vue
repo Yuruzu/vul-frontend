@@ -16,7 +16,7 @@
       <el-table :data="userData" border>
         <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="username" label="用户名称"></el-table-column>
-        <el-table-column prop="createtime" label="创建时间"> </el-table-column>
+        <el-table-column prop="createtime" label="创建时间" :formatter="formatTimeDate"> </el-table-column>
         <el-table-column prop="authority" label="用户权限"> </el-table-column>
         <el-table-column prop="lastlogintime" label="最后一次登录时间" :formatter="formatTimeDate"> </el-table-column>
         <el-table-column prop="status" label="状态"> </el-table-column>

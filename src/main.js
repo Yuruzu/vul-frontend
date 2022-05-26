@@ -14,7 +14,7 @@ Vue.use(ElementUI) //使用elementUI
 Vue.config.productionTip = false
 Vue.prototype.$http=axios
 Vue.prototype.$qs=qs
-// axios.defaults.baseURL = ''  // 配置请求的根路径
+axios.defaults.baseURL = 'http://192.168.32.169:5000/'  // 配置请求的根路径
 // 通过axios 拦截器添加token验证
 axios.interceptors.request.use(config => {
   config.headers.Token = window.sessionStorage.getItem('token')
@@ -27,7 +27,8 @@ Vue.prototype.formatTimeDate = function (row, column, cellValue, index) {
   if (date == undefined) {
     return ""
   }
-  return moment(date).format("YYYY-MM-DD HH:mm:ss")
+
+  return moment(date).utc().format("YYYY-MM-DD HH:mm:ss")
 }
 
 /* eslint-disable no-new */

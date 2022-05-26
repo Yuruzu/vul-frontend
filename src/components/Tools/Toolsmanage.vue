@@ -14,15 +14,15 @@
       </el-row>
       <!-- 端口扫描结果表格 -->
       <el-row :gutter="20" class="row-box">
-        <el-col :span="6" v-for="tools in toolsList" :key="tools.toolid" >
+        <el-col :span="6" v-for="tools in toolsList" :key="tools.id" >
           <el-card class="el-card">
-            <div class="card-heading" @click="showDetails(tools.toolid)">
+            <div class="card-heading" @click="showDetails(tools.id)">
               <span><img src="https://android-artworks.25pp.com/fs08/2021/08/10/11/110_771cb42bcbfdb1b7b5e9200e6a3fc4bc_con_130x130.png" class="image"></span>
               <span class="card-title">{{tools.vulname}}</span>
             </div>
             <div class="card-body">
-              {{tools.vulintro.length > 16? tools.vulintro.substr(0, 16) + '...': tools.vulintro }}
-              <el-button type="text" icon="el-icon-delete" circle size="medium " @click="deleteTool(tools.toolid)"></el-button>
+              {{tools.vulintro.length > 16? tools.vulintro.substr(0, 10) + '...': tools.vulintro }}
+              <el-button type="text" icon="el-icon-delete" circle size="medium " @click="deleteTool(tools.id)"></el-button>
             </div>
           </el-card>
         </el-col>
@@ -34,28 +34,29 @@
       :visible.sync="toolsdialogVisible"
       width="60%"
       :before-close="handleClose"
-      size="mini">
+      size="mini"
+      @close="dialogClose('uploadToolFormRef')">
 
-      <el-form ref="uploadToolForm" :model="uploadToolForm" label-width="100px">
-        <el-form-item label="针对漏洞名称">
+      <el-form ref="uploadToolFormRef" :model="uploadToolForm" label-width="110px" :rules="FormRules">
+        <el-form-item label="针对漏洞名称" prop="vulname">
           <el-input v-model="uploadToolForm.vulname"></el-input>
         </el-form-item>
-        <el-form-item label="漏洞类型">
+        <el-form-item label="漏洞类型" prop="vultype">
           <el-input v-model="uploadToolForm.vultype"></el-input>
         </el-form-item>
-        <el-form-item label="漏洞简介">
+        <el-form-item label="漏洞简介" prop="vulintro">
           <el-input v-model="uploadToolForm.vulintro"></el-input>
         </el-form-item>
-        <el-form-item label="影响范围">
+        <el-form-item label="影响范围" prop="vuleffect">
           <el-input v-model="uploadToolForm.vuleffect"></el-input>
         </el-form-item>
-        <el-form-item label="参数说明">
+        <el-form-item label="参数说明" prop="vulparas">
           <el-input v-model="uploadToolForm.vulparas"></el-input>
         </el-form-item>
-        <el-form-item label="使用说明">
+        <el-form-item label="使用说明" prop="vulinstructions">
           <el-input v-model="uploadToolForm.vulinstructions"></el-input>
         </el-form-item>
-        <el-form-item label="上传工具:" prop="toolfile">
+        <el-form-item label="上传工具:" prop="toolfileList">
           <el-upload
           class="upload-demo"
           action
@@ -65,6 +66,8 @@
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :before-remove="beforeRemove"
+          :before-upload="beforeUploadTool" 
+          :on-change="handleUploadSuccess"
           :limit="1"
           :on-exceed="handleExceed">
           <el-button size="small" type="primary">上传工具</el-button>
@@ -106,12 +109,24 @@ export default {
       uploadToolForm: {},
       toolfileList: [],
       toolmanualfileList: [],
-      queryInfo: ''
+      queryInfo: '',
+      FormRules: {
+        vulname: [
+          {
+            required: true, message: "请填写针对漏洞名称", trigger: "blur" 
+          }],
+        toolfileList: [
+          { required: true, message: "请上传工具", trigger: "blur" },
+        ],
+        toolmanualfile: [
+          { required: true, message: "请上传工具说明书", trigger: "blur" },
+        ],
+      }
     };
   },
   methods: {
     getTools() {
-      this.$http.get("http://192.168.32.169:8080/toolsmanage/")
+      this.$http.post("toolsmanage/owntool", {headers: {'Content-Type':'application/json'}})
       .then((res) => {
         console.log(res)
         if (res.data.status == 'success') {
@@ -120,9 +135,8 @@ export default {
       });
     },
     searchTool() {
-      this.$http.get("http://192.168.32.169:8080/toolsmanage/search", {params: {
-        'vulname': this.queryInfo
-        }})
+      var temp = JSON.stringify({"vulname": this.queryInfo})
+      this.$http.post("toolsmanage/searchtool", temp, {headers: {'Content-Type':'application/json'}})
       .then((res) => {
         console.log(res)
         if (res.data.status == 'success') {
@@ -142,13 +156,17 @@ export default {
         type: "warning",
       })
         .then(() => {
-        this.$http.get("http://192.168.32.169:8080/toolsmanage/deletetool", {params: {
+        console.log(toolid)
+        this.$http.get("toolsmanage/deletetool", {params: {
         'toolid': toolid
         }})
         .then((res) => {
-              if (res.data.status == 'success') {
+            if (res.data.status == 'success') {
                 this.getTools();
               }
+            if (res.data.status == 'error') {
+                this.$message.error('无删除权限');
+              } 
             });
         })
         .catch(() => {
@@ -160,37 +178,56 @@ export default {
     },
     // 覆盖默认的上传行为，可以自定义上传的实现，将上传的文件依次添加到fileList数组中,支持多个文件
     httptoolRequest(option) {
-      this.toolfileList.push(option)
+      this.uploadToolForm.toolfileList.push(option)
     },
     httptoolmanualRequest(option) {
       this.toolmanualfileList.push(option)
     },
-    submitForm(formName) {
-      const params = new FormData()
-      console.log(this.toolfileList)
-      // 将上传文件数组依次添加到参数paramsData中
-      params.append('toolfile', this.toolfileList[0].file)
-      params.append('toolmanualfile', this.toolmanualfileList[0].file)
+    beforeUploadTool() {
 
-      // 将输入表单数据添加到params表单中
-      params.append('vulname', this.uploadToolForm.vulname)
-      params.append('vultype', this.uploadToolForm.vultype)
-      params.append('vulintro', this.uploadToolForm.vulintro)
-      params.append('vuleffect', this.uploadToolForm.vuleffect)
-      params.append('vulparas', this.uploadToolForm.vulparas)
-      params.append('vulinstructions', this.uploadToolForm.vulinstructions)
-      //显示值
-      for (var value of params.values()) {
-        console.log(value);
-      }
-      this.$http.post("http://192.168.32.169:8080/toolsmanage/upload", params)
-      .then((res) => {
-        if (res.data.status == 'success') {
-          this.getTools();
-        }
-      });
-      this.toolsdialogVisible = false
     },
+    handleUploadSuccess(res, file, fileList) {
+      console.log("1111")
+      console.log(this.toolfileList)
+
+    },
+    dialogClose(formName) {
+      this.$refs[formName].resetFields();
+    },
+    submitForm(formName) {
+      this.$refs.uploadToolFormRef.validate((valid) => {
+        if (!valid) {
+          this.$message.error('表单未正确填写！');
+          return;
+        }
+        const params = new FormData()
+        // console.log(this.toolfileList)
+        // 将上传文件数组依次添加到参数paramsData中
+        params.append('toolfile', this.toolfileList[0].file)
+        params.append('toolmanualfile', this.toolmanualfileList[0].file)
+
+        // 将输入表单数据添加到params表单中
+        params.append('vulname', this.uploadToolForm.vulname)
+        params.append('vultype', this.uploadToolForm.vultype)
+        params.append('vulintro', this.uploadToolForm.vulintro)
+        params.append('vuleffect', this.uploadToolForm.vuleffect)
+        params.append('vulparas', this.uploadToolForm.vulparas)
+        params.append('vulinstructions', this.uploadToolForm.vulinstructions)
+        //显示值
+        for (var value of params.values()) {
+          console.log(value);
+        }
+        this.$http.post("toolsmanage/upload", params)
+        .then((res) => {
+          if (res.data.status == 'success') {
+            this.getTools();
+          }
+        });
+        this.toolsdialogVisible = false
+      });
+    },
+
+
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
